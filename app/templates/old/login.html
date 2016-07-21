@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="/static/js/jquery-3.0.0.min.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script>
+        // setup
+        var setup = function() {
+            // tab click
+            $('.gua-tab > a').on('click', function () {
+                var self = $(this);
+                $('.active').removeClass('active');
+                self.addClass('active');
+            });
+
+            // tab action
+            var tabAction = function (position, showLogin) {
+                $(".gua-block").animate({
+                    "left": position
+                }, "fast");
+                $('#id-div-login').toggle(showLogin);
+                $('#id-div-signup').toggle(!showLogin);
+            };
+
+            $('#id-a-signup').on('click', function() {
+                var position = '100px';
+                var showLogin = false;
+                tabAction(position, showLogin);
+            });
+            $('#id-a-login').on('click', function() {
+                var position = '155px';
+                var showLogin = true;
+                tabAction(position, showLogin);
+            });
+        };
+
+        var loginForm = function () {
+            var keys = [
+                'username',
+                'password',
+            ];
+            var loginPrefix = 'id-input-login-';
+            var form = formFromKeys(keys, loginPrefix);
+            return form;
+        };
+
+        var registerForm = function() {
+            var keys = [
+                'username',
+                'password',
+            ];
+            var registerPrefix = 'id-input-';
+            var form = formFromKeys(keys, registerPrefix);
+            return form;
+        };
+
+        // actions
+        var register = function(){
+            var form = registerForm();
+            var success = function (r) {
+                log('reg, ', r);
+                if(r.success) {
+                    log(r.next);
+                    window.location.href = r.next;
+                } else {
+                    alert(r.message);
+                }
+            };
+            var error = function (err) {
+                log('reg, ', err);
+            };
+            vip.register(form, success, error);
+        };
+
+        var login = function(){
+            var form = loginForm();
+            var success = function (r) {
+                log('login, ', r);
+                if(r.success) {
+                    log(r.next);
+                    window.location.href = r.next;
+                } else {
+                    alert(r.message);
+                }
+            };
+            var error = function (err) {
+                log('login, ', err);
+                alert(err);
+            };
+            vip.login(form, success, error);
+        };
+        
+        var bindActions = function() {
+            $('#id-button-register').on('click', function(){
+                register();
+            });
+
+            $('#id-button-login').on('click', function(){
+                login();
+            });
+        };
+
+        var __main = function() {
+            setup();
+            bindActions();
+            // select signup
+            $('#id-a-login').click();
+        };
+
+        $(document).ready(function(){
+            __main();
+        });
+    </script>
+</head>
+<body>
+    <div class="gua-container">
+        <div class="gua-main">
+            <div class="gua-header">
+                <h1 class="gua-title">微博</h1>
+            </div>
+            <div class="gua-form">
+                <div class="gua-tab">
+                    <a id="id-a-signup" href="#">注册</a>
+                    <a id="id-a-login" href="#">登录</a>
+                    <div class="gua-block"></div>
+                </div>
+                <div id="id-div-signup">
+                    <div class="gua-form-textinput">
+                        <div class="gua-input-wrapper">
+                            <input id="id-input-username" type="text" placeholder="用户名（不少于 3 位）" required/>
+                        </div>
+                        <div class="gua-input-wrapper">
+                            <input id="id-input-password" type="text" placeholder="密码（不少于 3 位）" required/>
+                        </div>
+                    </div>
+                    <button id="id-button-register" class="gua-button-big">注册</button>
+                </div>
+                <div id="id-div-login">
+                    <div class="gua-form-textinput">
+                        <div class="gua-input-wrapper">
+                            <input id="id-input-login-username" type="text" placeholder="用户名" required/>
+                        </div>
+                        <div class="gua-input-wrapper">
+                            <input id="id-input-login-password" type="text" placeholder="密码" required/>
+                        </div>
+                    </div>
+                    <button id="id-button-login" class="gua-button-big" type="submit">进入</button>
+                    <div class="gua-remember float-left">
+                        <!-- <label><input id="gua-id-remember" type="checkbox" name="remember" />记住我</label> -->
+                    </div>
+                    <a class="float-right" href="#">忘记密码？(现在还没做功能 点了也没用)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

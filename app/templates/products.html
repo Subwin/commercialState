@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>products</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/product.css">
+    <script src="/static/js/jquery-3.0.0.min.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script>
+        var productTemplate = function(product) {
+            var p = product;
+            var id = p.id;
+            var name = p.name;
+            var likes = p.likes;
+            var owns = p.owns;
+            var coverUrl = p.cover_url;
+            // name 需要自行去抓去一些有用的
+            // 封面图片自行去抓去一些 取名为 1.jpg  2.jpg  3.jpg
+            // 然后灌数据库的时候就可以直接 灌出有用的 coverUrl 了
+            var t = `
+                <article class="thing product" data-id="${id}">
+                    <header class="cover">
+                        <a class="cover-inner" target="_blank" href="">
+                            <img src="${coverUrl}"></a>
+                    </header>
+                    <section class="content">
+                        <h4 class="title">
+                            <a target="_blank" href="">${name}</a>
+                        </h4>
+                    </section>
+                    <footer class="info">
+                        <div class="stats">
+                            <a target="_blank" href="">
+                                <i class="fa fa-check-circle-o"></i>
+                                <span class="owners_count">${owns}人拥有</span>
+                            </a>
+                        </div>
+                        <div class="interactions">
+                            <span class="fancy_button">
+                                <a class="unfancied" href="#">
+                                    <i class="fa fa-heart-o"></i>
+                                    <span class="fanciers_count">${likes}</span>
+                                    <small>喜欢</small>
+                                </a>
+                            </span>
+                        </div>
+                    </footer>
+                </article>
+            `;
+            return t;
+        };
+
+        var insertProducts = function(products) {
+            for(var i = 0; i < products.length; i++) {
+                var p = products[i];
+                log('product', i, p.price);
+                var t = productTemplate(p);
+                $('#id-div-products').append(t);
+            };
+        };
+
+        var loadProducts = function(){
+            // 获取 products 并且插入页面
+            vip.products(function(r){
+                log('products get', r.success);
+                if(r.success) {
+                    var products = r.data;
+                    insertProducts(products);
+                } else {
+                    alert(r.message);
+                }
+            });
+        };
+
+        // 现在还没有这个东西，所以绑定事件是会失败的
+        $('#id-button-test').on('click', function() {
+            log('click test');
+            loadProducts();
+        });
+
+        // ready 的回调只会在整个html都载入后才执行
+        // 所以这时候已经拥有所有 节点 了
+        $(document).ready(function(){
+            // 事件委托
+            // 事件绑定在 document 上
+            // 但是只有 on 的第二个参数会响应这个事件
+{#            $(document).on('click', '#id-button-test', function(){#}
+{#                log('click window click');#}
+{#                loadProducts();#}
+{#            });#}
+            loadProducts();
+
+            $('#id-div-products').on('click', '.button-product', function(event){
+                log('click button delete');
+                var button = $(this);
+                var div = button.closest('.product');
+                // div 是一个 jQuery 对象
+                var id = div.data('id');
+                log('div, ', id);
+                vip.product_delete(id, function(r){
+                    if(r.success){
+                        log('删除成功', r);
+                        div.remove();
+                    } else {
+                        log('删除失败');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        var articleTemplate = function(article) {
+            var p = article;
+            var id = p.id;
+            var name = p.name;
+            var author = p.author;
+            var content = p.content;
+            var coverUrl = p.cover_url;
+{#            <div class="thumbnail--article">#}
+{#    <a class="thumbnail-cover" target="_blank" href="#"><img alt="夏季，便利店果汁的选购指南" src="https://making-photos.b0.upaiyun.com/entries/6a892187da5b8de131509e7e244d4490.jpg!middle"></a>#}
+{#    <div class="thumbnail-body">#}
+{#        <h3 class="thumbnail-title"><a href="#">夏季，便利店果汁的选购指南</a></h3>#}
+{#        <ul class="metas">#}
+{#            <li class="name"><a href="#">半岛便利店</a></li>#}
+{#            <li class="time"><time datetime="2016-07-06T15:17:00+08:00" title="2016-07-06 15:17:00" class="timeago" data-time-ago="2016-07-06T15:17:00+08:00">13天前</time></li>#}
+{#            <li><i class="fa fa-thumbs-o-up"></i><span>6</span></li>#}
+{#            <li><a target="_blank" href="#"><i class="fa fa-comment-o"></i><span>8</span></a></li>#}
+{#        </ul>#}
+{#        <div class="thumbnail-label"><label>特选</label></div>#}
+{#    </div>#}
+{#</div>#}
+            var t = ``
+        };
+    </script>
+    <script>
+        var loadAticles = function(){
+            vip.articles(function (r) {
+                if(r.success){
+                    var articles = r.data;
+                    insertAticles(articles);
+{#                    todo#}
+                }else{
+
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+{#    <button id="id-button-test">test button</button>#}
+    <div id="id-div-products" class="container clearfix">
+        <div class="hits_group-head">
+            <div class="hits_group-title">精选产品</div>
+            <div class="hits_group-readmore">
+                <a href="">查看更多</a>
+            </div>
+        </div>
+<!-- 这是测试的时候用的模板, icon 还没有添加 先这样 -->
+<!--
+<article class="thing">
+    <header class="cover">
+        <a class="cover-inner" target="_blank" href="">
+            <img src="图片 url"></a>
+    </header>
+    <section class="content">
+        <h4 class="title">
+            <a target="_blank" href="">卡菲单反无线取景器</a>
+        </h4>
+    </section>
+    <footer class="info">
+        <div class="stats">
+            <a target="_blank" href="">
+                <i class="fa fa-check-circle-o"></i>
+                <span class="owners_count">300人拥有</span>
+            </a>
+        </div>
+        <div class="interactions">
+            <span class="fancy_button">
+                <a class="unfancied" href="#">
+                    <i class="fa fa-heart-o"></i>
+                    <span class="fanciers_count">39</span>
+                    <small>喜欢</small>
+                </a>
+            </span>
+        </div>
+    </footer>
+</article>
+-->
+
+
+    <div id="id-div-articles" class="container">
+        <div class="hits_group-head">
+            <div class="hits_group-title">精选文章</div>
+            <div class="hits_group-readmore">
+                <a href="">查看更多</a>
+            </div>
+        </div>
+    </div>
+
+<!-- 这里是文章的模板 -->
+<!-- 做成模板后 删掉这些测试数据 -->
+
+<div class="thumbnail--article">
+    <a class="thumbnail-cover" target="_blank" href="#"><img alt="夏季，便利店果汁的选购指南" src="https://making-photos.b0.upaiyun.com/entries/6a892187da5b8de131509e7e244d4490.jpg!middle"></a>
+    <div class="thumbnail-body">
+        <h3 class="thumbnail-title"><a href="#">夏季，便利店果汁的选购指南</a></h3>
+        <ul class="metas">
+            <li class="name"><a href="#">半岛便利店</a></li>
+            <li class="time"><time datetime="2016-07-06T15:17:00+08:00" title="2016-07-06 15:17:00" class="timeago" data-time-ago="2016-07-06T15:17:00+08:00">13天前</time></li>
+            <li><i class="fa fa-thumbs-o-up"></i><span>6</span></li>
+            <li><a target="_blank" href="#"><i class="fa fa-comment-o"></i><span>8</span></a></li>
+        </ul>
+        <div class="thumbnail-label"><label>特选</label></div>
+    </div>
+</div>
+
+<div class="thumbnail--article">
+    <a class="thumbnail-cover" target="_blank" href="/entries/577cb3e3aaaf2115d6000118"><img alt="夏季，便利店果汁的选购指南" src="https://making-photos.b0.upaiyun.com/entries/6a892187da5b8de131509e7e244d4490.jpg!middle"></a>
+    <div class="thumbnail-body">
+        <h3 class="thumbnail-title"><a href="/entries/577cb3e3aaaf2115d6000118">夏季，便利店果汁的选购指南</a></h3>
+        <ul class="metas">
+            <li class="name"><a href="/users/5771e65b1b42be78f10038a8">半岛便利店</a></li>
+            <li class="time"><time datetime="2016-07-06T15:17:00+08:00" title="2016-07-06 15:17:00" class="timeago" data-time-ago="2016-07-06T15:17:00+08:00">13天前</time></li>
+            <li><i class="fa fa-thumbs-o-up"></i><span>6</span></li>
+            <li><a target="_blank" href="/entries/577cb3e3aaaf2115d6000118#comments"><i class="fa fa-comment-o"></i><span>8</span></a></li>
+        </ul>
+        <div class="thumbnail-label"><label>特选</label></div>
+    </div>
+</div>
+
+<div class="thumbnail--article">
+    <a class="thumbnail-cover" target="_blank" href="/entries/577cb3e3aaaf2115d6000118"><img alt="夏季，便利店果汁的选购指南" src="https://making-photos.b0.upaiyun.com/entries/6a892187da5b8de131509e7e244d4490.jpg!middle"></a>
+    <div class="thumbnail-body">
+        <h3 class="thumbnail-title"><a href="/entries/577cb3e3aaaf2115d6000118">夏季，便利店果汁的选购指南</a></h3>
+        <ul class="metas">
+            <li class="name"><a href="/users/5771e65b1b42be78f10038a8">半岛便利店</a></li>
+            <li class="time"><time datetime="2016-07-06T15:17:00+08:00" title="2016-07-06 15:17:00" class="timeago" data-time-ago="2016-07-06T15:17:00+08:00">13天前</time></li>
+            <li><i class="fa fa-thumbs-o-up"></i><span>6</span></li>
+            <li><a target="_blank" href="/entries/577cb3e3aaaf2115d6000118#comments"><i class="fa fa-comment-o"></i><span>8</span></a></li>
+        </ul>
+        <div class="thumbnail-label"><label>特选</label></div>
+    </div>
+</div>
+
+<div class="thumbnail--article">
+    <a class="thumbnail-cover" target="_blank" href="/entries/577cb3e3aaaf2115d6000118"><img alt="夏季，便利店果汁的选购指南" src="https://making-photos.b0.upaiyun.com/entries/6a892187da5b8de131509e7e244d4490.jpg!middle"></a>
+    <div class="thumbnail-body">
+        <h3 class="thumbnail-title"><a href="/entries/577cb3e3aaaf2115d6000118">夏季，便利店果汁的选购指南</a></h3>
+        <ul class="metas">
+            <li class="name"><a href="/users/5771e65b1b42be78f10038a8">半岛便利店</a></li>
+            <li class="time"><time datetime="2016-07-06T15:17:00+08:00" title="2016-07-06 15:17:00" class="timeago" data-time-ago="2016-07-06T15:17:00+08:00">13天前</time></li>
+            <li><i class="fa fa-thumbs-o-up"></i><span>6</span></li>
+            <li><a target="_blank" href="/entries/577cb3e3aaaf2115d6000118#comments"><i class="fa fa-comment-o"></i><span>8</span></a></li>
+        </ul>
+        <div class="thumbnail-label"><label>特选</label></div>
+    </div>
+</div>
+
+    </div>
+</body>
+</html>

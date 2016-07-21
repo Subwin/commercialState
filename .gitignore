@@ -24,6 +24,8 @@ $RECYCLE.BIN/
 # OSX
 # =========================
 
+*.pyc
+.idea/*
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -45,3 +47,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+db.sqlite
+db1.sqlite
+.DS_Store
+__pycache__/*

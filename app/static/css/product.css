@@ -1,0 +1,24 @@
+.clearfix::after {
+    content: ' ';
+    display: block;
+    clear: both;
+}
+
+div.container {
+    width: 800px;
+    margin-bottom: 20px;
+}
+
+article.thing {
+    float: left;
+    width: 31%;
+    margin-right:2%;
+    margin-bottom:10px;
+}
+
+div.thumbnail--article {
+    float: left;
+    width: 48%;
+    margin-right:2%;
+    margin-bottom:10px;
+}
