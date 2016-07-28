@@ -134,14 +134,24 @@
         };
     </script>
     <script>
-        var loadAticles = function(){
+        var insertArticles = function (articles) {
+            for(var i=0; i<articles.length; i++){
+                log('arti')
+                a = articles[i]
+                t = articleTemplate(a)
+
+            }
+        };
+
+        var loadArticles = function(){
             vip.articles(function (r) {
                 if(r.success){
+                    log('载入成功')
                     var articles = r.data;
-                    insertAticles(articles);
+                    insertArticles(articles);
 {#                    todo#}
                 }else{
-
+                    log('载入失败')
                 }
             })
         }

@@ -86,9 +86,9 @@ def passage_add():
 
 def main():
     # product_list()
-    # for i in range(100):
-    #     product_add()
-    for i in range(100):
+    for i in range(9):
+        product_add()
+    for i in range(9):
         passage_add()
 
 if __name__ == '__main__':
